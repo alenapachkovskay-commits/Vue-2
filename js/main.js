@@ -2,6 +2,7 @@
 let app = new Vue({
     el: '#app',
     data: {
+        
         columns: [
             {
                 columnId: 1,
