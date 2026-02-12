@@ -12,16 +12,7 @@ let app = new Vue({
                 columnId: 1,
                 columnTitle: "Запланировано",
                 maxCards: 3,
-                columnCards: [
-                    {
-                        id: 11,
-                        title: '',
-                        items: [
-                            { text: '', done: false },
-                            { text: '', done: false },
-                        ]
-                    }
-                ]
+                columnCards: [],
             },
             {
                 columnId: 2,
@@ -40,6 +31,10 @@ let app = new Vue({
     },
     methods: {
         addCard() {
+            if (this.columns[0].columnCards.length >= 3) {
+                alert("STOOOOOP 3 IS ENOTH");
+                return;
+            }
             if (!this.newCard.newTitle.trim()) return;
             const allFilled = this.newCard.newItems.every(item => item.trim());
             if (!allFilled) return;
