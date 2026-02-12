@@ -30,6 +30,9 @@
                </button>
 
                <button type="submit">Создать карточку</button>
+               <p v-if="formError" style="color: red; margin-top: 8px;">
+                  {{ formError }}
+                </p>
             </form>
             <div v-for="card in column.columnCards" :key="card.id" class="card">
                <h3>{{ card.title }}</h3>
@@ -47,7 +50,7 @@
 
    <!--
 git add . 
-git commit -m "feat: cant create card max 3"  
+git commit -m "feat: new error"  
 git push
 -->
    <!-- Ваша задача разработать приложение для хранения заметок.

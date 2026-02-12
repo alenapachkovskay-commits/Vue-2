@@ -7,6 +7,7 @@ let app = new Vue({
             newItems: ['', '', '']
 
         },
+        formError: '',
         columns: [
             {
                 columnId: 1,
@@ -31,14 +32,21 @@ let app = new Vue({
     },
     methods: {
         addCard() {
+            this.formError = '';
             if (this.columns[0].columnCards.length >= 3) {
-                alert("STOOOOOP 3 IS ENOTH");
+                this.formError = "STOOOOOP 3 IS ENOTH";
                 return;
             }
-            if (!this.newCard.newTitle.trim()) return;
-            const allFilled = this.newCard.newItems.every(item => item.trim());
-            if (!allFilled) return;
+            if (!this.newCard.newTitle.trim()) {
+                this.formError = "U DONT HAVE TITLE!";
+                return;
+            }
 
+            const allFilled = this.newCard.newItems.every(item => item.trim());
+            if (!allFilled) {
+                this.formError = "ALL TASK SHULLB BE FULL!";
+                return;
+            }
             const card = {
                 id: Date.now(),
                 title: this.newCard.newTitle,
