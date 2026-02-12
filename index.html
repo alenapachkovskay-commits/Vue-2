@@ -29,7 +29,8 @@
                   – Убрать
                </button>
 
-               <button type="submit">Создать карточку</button>
+               <button type="submit" :disable="isFirstColumnBlocked">
+                  {{ isFirstColumnBlocked ? 'COLUMN BLOCKED!' : 'Создать карточку' }}</button>
                <p v-if="formError">
                   {{ formError }}
                </p>
@@ -38,7 +39,8 @@
                <h3>{{ card.title }}</h3>
                <ul>
                   <li v-for="(task, idx) in card.items" :key="idx">
-                     <input type="checkbox" :checked="task.done" @change="handleTaskToggle(card, task, column)">
+                     <input type="checkbox" :checked="task.done" @change="handleTaskToggle(card, task, column)"
+                        :disabled="isFirstColumnBlocked && column.columnId === 1">
                      {{ task.text }}
                   </li>
                </ul>
@@ -53,7 +55,7 @@
 
    <!--
 git add . 
-git commit -m "feat: after 100% move"  
+git commit -m "feat: localstorege"  
 git push
 -->
    <!-- Ваша задача разработать приложение для хранения заметок.

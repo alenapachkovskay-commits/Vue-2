@@ -31,6 +31,17 @@ let app = new Vue({
         ]
     },
     methods: {
+        saveColumns() {
+            localStorage.setItem('kanbanColumns', JSON.stringify(this.columns));
+        },
+
+
+        loadColumnsFromLocalStorage() {
+            const saved = localStorage.getItem('kanbanColumns');
+            if (saved) {
+                this.columns = JSON.parse(saved);
+            }
+        },
         handleTaskToggle(card, task, column) {
             task.done = !task.done;
             const totalTasks = card.items.length;
@@ -46,6 +57,7 @@ let app = new Vue({
             if (column.columnId === 1 && percent > 50) {
                 this.moveCardToSecondColumn(card);
             }
+            this.saveColumns();
         },
         moveCardToSecondColumn(card) {
             const secondColumn = this.columns[1];
@@ -61,7 +73,7 @@ let app = new Vue({
             }
 
             secondColumn.columnCards.push(card);
-
+            this.saveColumns();
         },
         moveCardToThirdColumn(card) {
             for (let col of this.columns) {
@@ -73,8 +85,13 @@ let app = new Vue({
             }
             const thirdColumn = this.columns[2];
             thirdColumn.columnCards.push(card);
+            this.saveColumns();
         },
         addCard() {
+            if (this.isFirstColumnBlocked) {
+                this.formError = "FIRST COLUMN BLOCKED!";
+                return;
+            }
             this.formError = '';
             if (this.columns[0].columnCards.length >= 3) {
                 this.formError = "STOOOOOP 3 IS ENOTH";
@@ -102,6 +119,7 @@ let app = new Vue({
 
             this.columns[0].columnCards.push(card);
             this.newCard = { newTitle: '', newItems: ['', '', ''] };
+            this.saveColumns();
         },
         addTaskField() {
             this.newCard.newItems.push('');
@@ -109,5 +127,30 @@ let app = new Vue({
         removeTaskField() {
             this.newCard.newItems.pop();
         },
-    }
+    },
+    computed: {
+        isFirstColumnBlocked() {
+            const secondColumn = this.columns[1];
+            const firstColumn = this.columns[0];
+
+            if (secondColumn.columnCards.length < 5) {
+                return false;
+            }
+
+            for (const card of firstColumn.columnCards) {
+                const total = card.items.length;
+                const completed = card.items.filter(item => item.done).length;
+                const percent = (completed / total) * 100;
+
+                if (percent > 50) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+    },
+    mounted() {
+        this.loadColumnsFromLocalStorage();
+    },
 });
