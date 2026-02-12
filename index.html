@@ -32,19 +32,20 @@
                <button type="submit">Создать карточку</button>
                <p v-if="formError">
                   {{ formError }}
-                </p>
+               </p>
             </form>
             <div v-for="card in column.columnCards" :key="card.id" class="card">
                <h3>{{ card.title }}</h3>
                <ul>
-                 <li v-for="(task, idx) in card.items" :key="idx">
-                   <input type="checkbox" 
-                   :checked="task.done"
-                   @change="handleTaskToggle(card, task, column)">
-                   {{ task.text }}
-                 </li>
+                  <li v-for="(task, idx) in card.items" :key="idx">
+                     <input type="checkbox" :checked="task.done" @change="handleTaskToggle(card, task, column)">
+                     {{ task.text }}
+                  </li>
                </ul>
-             </div>
+               <p v-if="card.completedAt">
+                  done: {{ card.completedAt }}
+               </p>
+            </div>
 
          </div>
       </div>
@@ -52,7 +53,7 @@
 
    <!--
 git add . 
-git commit -m "feat: after 50% move"  
+git commit -m "feat: after 100% move"  
 git push
 -->
    <!-- Ваша задача разработать приложение для хранения заметок.

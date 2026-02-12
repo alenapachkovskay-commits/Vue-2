@@ -34,21 +34,45 @@ let app = new Vue({
         handleTaskToggle(card, task, column) {
             task.done = !task.done;
             const totalTasks = card.items.length;
+            if (totalTasks === 0) return;
+
             const completedTasks = card.items.filter(item => item.done).length;
-            const percentComplete = (completedTasks / totalTasks) * 100;
-            if (column.columnId === 1 && percentComplete > 50) {
+            const percent = (completedTasks / totalTasks) * 100;
+            if (percent === 100) {
+                card.completedAt = new Date().toLocaleString('ru-RU');
+                this.moveCardToThirdColumn(card);
+                return;
+            }
+            if (column.columnId === 1 && percent > 50) {
                 this.moveCardToSecondColumn(card);
             }
         },
         moveCardToSecondColumn(card) {
+            const secondColumn = this.columns[1];
+            if (secondColumn.columnCards.length >= 5) {
+
+                console.log("SECOND CARD IS FULL!");
+                return;
+            }
             const firstColumn = this.columns[0];
             const cardIndex = firstColumn.columnCards.findIndex(c => c.id === card.id);
             if (cardIndex !== -1) {
                 firstColumn.columnCards.splice(cardIndex, 1);
             }
-            const secondColumn = this.columns[1];
+
             secondColumn.columnCards.push(card);
 
+        },
+        moveCardToThirdColumn(card) {
+            for (let col of this.columns) {
+                const index = col.columnCards.findIndex(c => c.id === card.id);
+                if (index !== -1) {
+                    col.columnCards.splice(index, 1);
+                    break;
+                }
+            }
+            const thirdColumn = this.columns[2];
+            thirdColumn.columnCards.push(card);
         },
         addCard() {
             this.formError = '';
