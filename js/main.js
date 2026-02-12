@@ -31,6 +31,25 @@ let app = new Vue({
         ]
     },
     methods: {
+        handleTaskToggle(card, task, column) {
+            task.done = !task.done;
+            const totalTasks = card.items.length;
+            const completedTasks = card.items.filter(item => item.done).length;
+            const percentComplete = (completedTasks / totalTasks) * 100;
+            if (column.columnId === 1 && percentComplete > 50) {
+                this.moveCardToSecondColumn(card);
+            }
+        },
+        moveCardToSecondColumn(card) {
+            const firstColumn = this.columns[0];
+            const cardIndex = firstColumn.columnCards.findIndex(c => c.id === card.id);
+            if (cardIndex !== -1) {
+                firstColumn.columnCards.splice(cardIndex, 1);
+            }
+            const secondColumn = this.columns[1];
+            secondColumn.columnCards.push(card);
+
+        },
         addCard() {
             this.formError = '';
             if (this.columns[0].columnCards.length >= 3) {
