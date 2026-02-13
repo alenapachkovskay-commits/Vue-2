@@ -14,17 +14,15 @@
 
 <body>
    <div id="app" class="all">
+      <h1> Нормисный дизайн <p>(позор, где мая ультра крутая палитра??)</p></h1>
       <div id="doard" class="doard">
          <div class="column" v-for="column in columns" :key="column.id">
             <h2>{{ column.title }}</h2>
             <form v-if="column.id === 1" @submit.prevent="createCard">
                <input v-model="newCard.title" placeholder="Заголовок задачи" required><br><br>
-
                <textarea v-model="newCard.description" placeholder="Описание задачи" required></textarea><br><br>
-
                <label>Дедлайн:</label>
                <input type="date" v-model="newCard.deadline" required><br><br>
-
                <button type="submit">Создать задачу</button>
             </form>
             <div class="card" v-for="card in column.cards" :key="card.id">
@@ -44,7 +42,12 @@
                   <p>{{ card.description }}</p>
                   <p><strong>Дедлайн:</strong> {{ card.deadline }}</p>
                   <p v-if="card.updatedAt"><strong>Изменена:</strong> {{ card.updatedAt }}</p>
-
+                  <p v-if="card.returnReason">
+                     Причина возврата: {{ card.returnReason }}
+                  </p>
+                  <p v-if="card.status" :style="{ color: card.status === 'overdue' ? 'rgb(240, 102, 61)' : 'rgb(42, 161, 42)' }">
+                     <strong>{{ card.status === 'overdue' ? 'Просрочена' : 'Выполнена в срок' }}</strong>
+                   </p>
                   <div class="button">
 
                      <button v-if="column.id === 1" @click="startEdit(card)">Редактировать</button>
@@ -57,8 +60,13 @@
                      <button v-if="column.id === 3" @click="moveToColumn(card.id, 4)">Выполнено</button>
                      <button v-if="column.id === 3" @click="showReturnForm(card.id)">Вернуть в работу</button>
                   </div>
-
                </div>
+            </div>
+            <div v-if="returningCardId && column.id === 3">
+               <label>Причина возврата:</label><br>
+               <textarea v-model="returnReason" placeholder="Укажите причину..." required></textarea><br><br>
+               <button @click="confirmReturn">Подтвердить</button>
+               <button @click="cancelReturn">Отмена</button>
             </div>
          </div>
       </div>
@@ -66,7 +74,7 @@
 
    <!--
 git add . 
-git commit -m "feat: u can edit and move card now"  
+git commit -m "feat:  edit and move card done"  
 git push
 -->
    <!--Ваша задача реализовать Kanban доски (Trello, Yougile).

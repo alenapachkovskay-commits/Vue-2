@@ -2,6 +2,8 @@
 let app = new Vue({
     el: '#app',
     data: {
+        returningCardId: null,
+        returnReason: '',
         editForm: {
             title: '',
             description: '',
@@ -23,7 +25,8 @@ let app = new Vue({
                         description: "Переписать код на Vue 3, убрать глобальные переменные.",
                         createdAt: "13.02.2026",
                         deadline: "20.02.2026",
-                        isEditing: false
+                        isEditing: false,
+                        returnReason: null,
                     }
                 ]
             },
@@ -61,6 +64,7 @@ let app = new Vue({
                 updatedAt: null,
                 isEditing: false,
                 returnReason: null,
+                status: null
             };
             this.columns[0].cards.push(card);
             this.newCard = { title: '', description: '', deadline: '' };
@@ -97,37 +101,22 @@ let app = new Vue({
             if (sourceColumn && cardIndex !== -1) {
                 const card = sourceColumn.cards.splice(cardIndex, 1)[0];
                 const targetColumn = this.columns.find(col => col.id === targetColumnId);
+
                 if (targetColumn) {
+                    if (targetColumnId === 4) {
+                        const today = new Date();
+                        const deadlineDate = new Date(card.deadline);
+
+                        if (deadlineDate < today) {
+                            card.status = 'overdue';
+                        } else {
+                            card.status = 'on-time';
+                        }
+                    }
+
                     targetColumn.cards.push(card);
                 }
             }
         },
-        showReturnForm(cardId) {
-            this.returningCardId = cardId;
-            this.returnReason = '';
-          },
-
-          confirmReturn() {
-            if (!this.returnReason.trim()) return;
-
-            let card = null;
-            for (const col of this.columns) {
-              card = col.cards.find(c => c.id === this.returningCardId);
-              if (card) break;
-            }
-          
-            if (card) {
-              card.returnReason = this.returnReason.trim();
-              this.moveToColumn(this.returningCardId, 2);
-            }
-          
-            this.cancelReturn();
-          },
-
-          cancelReturn() {
-            this.returningCardId = null;
-            this.returnReason = '';
-          }
-
-    },
+    }
 });
