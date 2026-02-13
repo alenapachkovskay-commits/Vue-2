@@ -2,6 +2,12 @@
 let app = new Vue({
     el: '#app',
     data: {
+        editingCardId: null,
+        editForm: {
+            title: '',
+            description: '',
+            deadline: ''
+        },
         newCard: {
             title: '',
             description: '',
@@ -55,6 +61,23 @@ let app = new Vue({
             this.columns[0].cards.push(card);
             this.newCard = { title: '', description: '', deadline: '' };
         },
-    },
+        startEdit(cardId) {
+            this.editingCardId = cardId;
+        },
 
+        saveEdit(cardId) {
+            this.editingCardId = null;
+        },
+
+        cancelEdit() {
+            this.editingCardId = null;
+        },
+
+        deleteCard(cardId) {
+            const index = this.columns[0].cards.findIndex(c => c.id === cardId);
+            if (index !== -1) {
+                this.columns[0].cards.splice(index, 1);
+            }
+        }
+    },
 });

@@ -28,10 +28,28 @@
                <button type="submit">Создать задачу</button>
             </form>
             <div class="card" v-for="card in column.cards" :key="card.id">
-               <p><strong>Создана:</strong> {{ card.createdAt }}</p>
-               <h3>{{ card.title }}</h3>
-               <p>{{ card.description }}</p>
-               <p><strong>Дедлайн:</strong> {{ card.deadline }}</p>
+               <div v-if="editingCardId === card.id && column.id === 1" class="edit">
+                  <input v-model="card.title" placeholder="Заголовок"><br><br>
+                  <textarea v-model="card.description" placeholder="Описание"></textarea><br><br>
+                  <label>Дедлайн:</label>
+                  <input type="date" v-model="card.deadline"><br><br>
+                  <div class="button">
+                     <button @click="saveEdit(card.id)">Сохранить</button>
+                     <button @click="cancelEdit">Отмена</button>
+                  </div>
+               </div>
+
+               <div v-else>
+                  <p><strong>Создана:</strong> {{ card.createdAt }}</p>
+                  <h3>{{ card.title }}</h3>
+                  <p>{{ card.description }}</p>
+                  <p><strong>Дедлайн:</strong> {{ card.deadline }}</p>
+
+                  <div v-if="column.id === 1" class="button">
+                     <button @click="startEdit(card.id)">Редактировать</button>
+                     <button @click="deleteCard(card.id)">Удалить</button>
+                  </div>
+               </div>
             </div>
          </div>
       </div>
@@ -39,7 +57,7 @@
 
    <!--
 git add . 
-git commit -m "feat: u can crete card now"  
+git commit -m "feat: u can edit and delete card now"  
 git push
 -->
    <!--Ваша задача реализовать Kanban доски (Trello, Yougile).
