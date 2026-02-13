@@ -17,7 +17,16 @@
       <div id="doard" class="doard">
          <div class="column" v-for="column in columns" :key="column.id">
             <h2>{{ column.title }}</h2>
+            <form v-if="column.id === 1" @submit.prevent="createCard">
+               <input v-model="newCard.title" placeholder="Заголовок задачи" required><br><br>
 
+               <textarea v-model="newCard.description" placeholder="Описание задачи" required></textarea><br><br>
+
+               <label>Дедлайн:</label>
+               <input type="date" v-model="newCard.deadline" required><br><br>
+
+               <button type="submit">Создать задачу</button>
+            </form>
             <div class="card" v-for="card in column.cards" :key="card.id">
                <p><strong>Создана:</strong> {{ card.createdAt }}</p>
                <h3>{{ card.title }}</h3>
@@ -30,7 +39,7 @@
 
    <!--
 git add . 
-git commit -m "feat: first test card"  
+git commit -m "feat: form and css"  
 git push
 -->
    <!--Ваша задача реализовать Kanban доски (Trello, Yougile).

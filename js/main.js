@@ -2,6 +2,11 @@
 let app = new Vue({
     el: '#app',
     data: {
+        newCard: {
+            title: '',
+            description: '',
+            deadline: ''
+          },
         columns: [
             {
                 id: 1,
