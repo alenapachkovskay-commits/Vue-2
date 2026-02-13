@@ -2,32 +2,35 @@
 let app = new Vue({
     el: '#app',
     data: {
-        newCard: {
-            newTitle: '',
-            newItems: ['', '', '']
-
-        },
-        formError: '',
         columns: [
             {
-                columnId: 1,
-                columnTitle: "Запланировано",
-                maxCards: 3,
-                columnCards: [],
+                id: 1,
+                title: "Запланированные задачи",
+                cards: [
+                    {
+                        id: 101,
+                        title: "Рефакторинг модуля авторизации",
+                        description: "Переписать код на Vue 3, убрать глобальные переменные.",
+                        createdAt: "13.02.2026",
+                        deadline: "20.02.2026"
+                    }
+                ]
             },
             {
-                columnId: 2,
-                columnTitle: "В работе",
-                maxCards: 5,
-                columnCards: [],
-
+                id: 2,
+                title: "Задачи в работе",
+                cards: []
             },
             {
-                columnId: 3,
-                columnTitle: "Выполнено",
-                columnCards: [],
-
-            }
+                id: 3,
+                title: "Тестирование",
+                cards: []
+            },
+            {
+                id: 4,
+                title: "Выполненные задачи",
+                cards: []
+            },
         ]
     },
 

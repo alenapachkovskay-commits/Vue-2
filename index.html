@@ -9,16 +9,28 @@
    <script defer src="js/vue.js"></script>
    <script defer src="js/main.js"></script>
    <link rel="stylesheet" href="css/main.css">
-   <title>Product App</title>
+   <title>Kanban Task Board</title>
 </head>
 
 <body>
    <div id="app" class="all">
+      <div id="doard" class="doard">
+         <div class="column" v-for="column in columns" :key="column.id">
+            <h2>{{ column.title }}</h2>
+
+            <div class="card" v-for="card in column.cards" :key="card.id">
+               <p><strong>Создана:</strong> {{ card.createdAt }}</p>
+               <h3>{{ card.title }}</h3>
+               <p>{{ card.description }}</p>
+               <p><strong>Дедлайн:</strong> {{ card.deadline }}</p>
+            </div>
+         </div>
+      </div>
    </div>
 
    <!--
 git add . 
-git commit -m "feat: 3 laba start"  
+git commit -m "feat: first test card"  
 git push
 -->
    <!--Ваша задача реализовать Kanban доски (Trello, Yougile).
