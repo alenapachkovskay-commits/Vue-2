@@ -28,27 +28,36 @@
                <button type="submit">Создать задачу</button>
             </form>
             <div class="card" v-for="card in column.cards" :key="card.id">
-               <div v-if="editingCardId === card.id && column.id === 1" class="edit">
+               <div v-if="card.isEditing" class="edit">
                   <input v-model="card.title" placeholder="Заголовок"><br><br>
                   <textarea v-model="card.description" placeholder="Описание"></textarea><br><br>
                   <label>Дедлайн:</label>
                   <input type="date" v-model="card.deadline"><br><br>
                   <div class="button">
-                     <button @click="saveEdit(card.id)">Сохранить</button>
-                     <button @click="cancelEdit">Отмена</button>
+                     <button @click="saveEdit(card)">Сохранить</button>
+                     <button @click="cancelEdit(card)">Отмена</button>
                   </div>
                </div>
-
                <div v-else>
                   <p><strong>Создана:</strong> {{ card.createdAt }}</p>
                   <h3>{{ card.title }}</h3>
                   <p>{{ card.description }}</p>
                   <p><strong>Дедлайн:</strong> {{ card.deadline }}</p>
+                  <p v-if="card.updatedAt"><strong>Изменена:</strong> {{ card.updatedAt }}</p>
 
-                  <div v-if="column.id === 1" class="button">
-                     <button @click="startEdit(card.id)">Редактировать</button>
-                     <button @click="deleteCard(card.id)">Удалить</button>
+                  <div class="button">
+
+                     <button v-if="column.id === 1" @click="startEdit(card)">Редактировать</button>
+                     <button v-if="column.id === 1" @click="moveToColumn(card.id, 2)">В работу</button>
+                     <button v-if="column.id === 1" @click="deleteCard(card.id)">Удалить</button>
+
+                     <button v-if="column.id === 2" @click="startEdit(card)">Редактировать</button>
+                     <button v-if="column.id === 2" @click="moveToColumn(card.id, 3)">В тестирование</button>
+                     <button v-if="column.id === 3" @click="startEdit(card)">Редактировать</button>
+                     <button v-if="column.id === 3" @click="moveToColumn(card.id, 4)">Выполнено</button>
+                     <button v-if="column.id === 3" @click="showReturnForm(card.id)">Вернуть в работу</button>
                   </div>
+
                </div>
             </div>
          </div>
@@ -57,7 +66,7 @@
 
    <!--
 git add . 
-git commit -m "feat: u can edit and delete card now"  
+git commit -m "feat: u can edit and move card now"  
 git push
 -->
    <!--Ваша задача реализовать Kanban доски (Trello, Yougile).

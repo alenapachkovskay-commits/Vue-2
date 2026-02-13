@@ -57,6 +57,7 @@ button {
     height: 30px;
     align-items: center;
     text-align: center;
+   
 }
 textarea{
     height: 150px;
@@ -70,7 +71,7 @@ textarea{
     font-size: 16px;
 }
 p{
-    margin: 0;
+margin: 5px;
 }
 h2{
     margin-bottom: 20px;
@@ -78,7 +79,10 @@ h2{
 input::placeholder {
     color: rgb(204, 204, 204);
 }
-
+h3{
+    margin: 5px;
+    color: rgb(144, 255, 255)
+}
 .edit{
     display: flex;
     flex-direction: column;
@@ -88,5 +92,6 @@ input::placeholder {
 .button{
     gap: 5px;
     align-items: center;
-    display: flex;
+    display: flex; 
+    flex-wrap: wrap;
 }
