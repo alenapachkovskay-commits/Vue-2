@@ -14,55 +14,37 @@
 
 <body>
    <div id="app" class="all">
-      <div class="board">
-
-         <div class="column" v-for="column in columns" :key="column.columnId">
-            <h2>{{column.columnTitle}}</h2>
-            <form v-if="column.columnId === 1" @submit.prevent="addCard">
-               <input v-model="newCard.newTitle" placeholder="Заголовок карточки" required>
-               <div v-for="(item, index) in newCard.newItems" :key="index">
-                  <input v-model="newCard.newItems[index]" :placeholder="'Задача ' + (index + 1)" required>
-               </div>
-               <button type="button" v-if="newCard.newItems.length < 5" @click="addTaskField">
-                  + Задача
-               </button>
-               <button type="button" v-if="newCard.newItems.length > 3" @click="removeTaskField">
-                  – Убрать
-               </button>
-
-               <button type="submit" :disable="isFirstColumnBlocked">
-                  {{ isFirstColumnBlocked ? 'COLUMN BLOCKED!' : 'Создать карточку' }}</button>
-               <p v-if="formError">
-                  {{ formError }}
-               </p>
-            </form>
-            <div v-for="card in column.columnCards" :key="card.id" class="card">
-               <h3>{{ card.title }}</h3>
-               <ul>
-                  <li v-for="(task, idx) in card.items" :key="idx">
-                     <input type="checkbox" :checked="task.done" @change="handleTaskToggle(card, task, column)"
-                        :disabled="isFirstColumnBlocked && column.columnId === 1">
-                     {{ task.text }}
-                  </li>
-               </ul>
-               <p v-if="card.completedAt">
-                  done: {{ card.completedAt }}
-               </p>
-            </div>
-         </div>
-         <div class="task">
-            not done yet: {{ totalIncompleteTasks }}
-         </div>
-      </div>
    </div>
 
    <!--
 git add . 
-git commit -m "feat: 4 dop task"  
+git commit -m "feat: 3 laba start"  
 git push
 -->
-   <!-- На 4: добавить свойство, которое в реальном времени отражает 
-      суммарное количество невыполненных задач
+   <!--Ваша задача реализовать Kanban доски (Trello, Yougile).
+Доска состоит из четырех столбцов: “Запланированные задачи”, 
+“Задачи в работе”, “Тестирование”, “Выполненные задачи”. 
+Должна быть возможность создать только в первом столбце карточку задачи.
+Карточка должна содержать: дату создания, заголовок, описание задачи, дэдлайн.
+Функционал первого столбца.Должна быть возможность создания,
+ удаления и редактирования карточки с сохранением временного штампа последнего времени редактирования.
+Должна быть возможность перемещать карточку во второй столбец (“В работе”).
+Функционал второго столбца.Должна быть возможность 
+редактирования карточки с сохранением временного штампа последнего времени редактирования.
+Должна быть возможность перемещать карточку в третий столбец (“Тестирование”).
+Функционал третьего столбца.Должна быть возможность редактирования 
+карточки с сохранением временного штампа последнего времени редактирования.
+Должна быть возможность перемещать карточку в четвертый столбец (“Выполненные задачи”),
+ либо вернуть карточку во второй столбец (указывается причина возврата).
+Функционал четвертого столбца.Когда карточка переходит в этот столбец,
+ то проверяется срок дэдлайна. Если срок превышен, то карточка отмечается, 
+ как просроченная в противном случае отмечается выполненной в срок.
+Дизайн интерфейса остается на усмотрение разработчика,
+ но должен быть эстетичен и понятен для пользователя.
+Приложение должно быть разделено на компоненты. 
+Сами компоненты должны быть достаточно абстрактным 
+для повторного использования (по возможности).
+
 -->
 </body>
 
