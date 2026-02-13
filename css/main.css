@@ -115,18 +115,26 @@ button :disable {
     text-decoration: overline;
 }
 
+.task {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #0004ff;
+}
+
 @media(max-width: 1380px) {
     .column h2 {
         font-size: 24px;
 
     }
+
     form {
         width: 350px;
     }
-    
-    
+
+
     .card {
         width: 350px;
     }
-    
+
 }

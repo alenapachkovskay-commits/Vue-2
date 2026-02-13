@@ -149,6 +149,17 @@ let app = new Vue({
 
             return false;
         },
+        totalIncompleteTasks() {
+            let total = 0;
+            for (const column of this.columns) {
+              for (const card of column.columnCards) {
+                const incomplete = card.items.filter(item => !item.done).length;
+                //НЕвыполнено !!!
+                total += incomplete;
+              }
+            }
+            return total;
+          }
     },
     mounted() {
         this.loadColumnsFromLocalStorage();
