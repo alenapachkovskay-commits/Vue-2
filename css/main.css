@@ -78,6 +78,7 @@ p {
 
 h2 {
     margin-bottom: 20px;
+    text-decoration:overline;
 }
 
 input::placeholder {
