@@ -6,7 +6,7 @@ let app = new Vue({
             title: '',
             description: '',
             deadline: ''
-          },
+        },
         columns: [
             {
                 id: 1,
@@ -37,6 +37,24 @@ let app = new Vue({
                 cards: []
             },
         ]
+    },
+    methods: {
+        createCard() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const createdAt = `${day}.${month}.${year}`;
+            const card = {
+                id: Date.now(),
+                title: this.newCard.title,
+                description: this.newCard.description,
+                deadline: this.newCard.deadline,
+                createdAt: createdAt
+            };
+            this.columns[0].cards.push(card);
+            this.newCard = { title: '', description: '', deadline: '' };
+        },
     },
 
 });
