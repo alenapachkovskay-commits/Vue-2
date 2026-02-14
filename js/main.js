@@ -23,6 +23,12 @@ Vue.component('task-card', {
           <p v-if="card.status" :style="{ color: card.status === 'overdue' ? 'rgb(240, 102, 61)' : 'rgb(42, 161, 42)' }">
             <strong>{{ card.status === 'overdue' ? 'Просрочена' : 'Выполнена в срок' }}</strong>
           </p>
+          <div v-if="card.changeHistory && card.changeHistory.length > 0">
+            <p><strong>Изменения:</strong></p>
+            <ul>
+                <li v-for="(ts, index) in card.changeHistory" :key="index">{{ ts }}</li>
+            </ul>
+            </div>
           <div class="button">
             <button v-if="columnId === 1" @click="$emit('edit')">Редактировать</button>
             <button v-if="columnId === 1" @click="$emit('move', 2)">В работу</button>
@@ -119,6 +125,7 @@ let app = new Vue({
                         deadline: "20.02.2026",
                         isEditing: false,
                         returnReason: null,
+                        changeHistory: [],
                     }
                 ]
             },
@@ -176,20 +183,36 @@ let app = new Vue({
                 deadline: this.newCard.deadline,
                 createdAt: createdAt,
                 updatedAt: null,
+                changeHistory: [],
                 isEditing: false,
                 returnReason: null,
-                status: null
+                status: null,
             };
             this.columns[0].cards.push(card);
             this.newCard = { title: '', description: '', deadline: '' };
         },
         startEdit(card) {
+            card.__original = {
+                title: card.title,
+                description: card.description,
+                deadline: card.deadline
+            };
             card.isEditing = true;
         },
         saveEdit(card) {
-            const now = new Date();
-            card.updatedAt = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}`;
+            const hasChanged =
+                card.title !== card.__original.title ||
+                card.description !== card.__original.description ||
+                card.deadline !== card.__original.deadline;
+            if (hasChanged) {
+                const now = new Date();
+                const timestamp = `${now.getDate()}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+                card.changeHistory.push(timestamp);
+                card.updatedAt = timestamp;
+            }
+
             card.isEditing = false;
+            delete card.__original; 
         },
         cancelEdit(card) {
             card.isEditing = false;
