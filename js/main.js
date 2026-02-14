@@ -47,6 +47,7 @@ Vue.component('task-column', {
         'returnReason',
         'newCard'
     ],
+    props: ['column', 'returningCardId', 'returnReason', 'newCard'],
     template: `
       <div class="column">
         <h2>{{ column.title }}</h2>
@@ -79,11 +80,12 @@ Vue.component('task-column', {
           <label>Причина возврата:</label><br>
           <textarea 
             :value="returnReason" 
-            @input="$emit('update:returnReason', $event.target.value)"
+            @input="$emit('update:return-reason', $event.target.value)"
             placeholder="Укажите причину..." 
             required
           ></textarea><br><br>
-          <button @click="$emit('return-confirm')">Подтвердить</button>
+          
+  <button @click="$emit('return-confirm', returnReason)">Подтвердить</button>
           <button @click="$emit('return-cancel')">Отмена</button>
         </div>
       </div>
@@ -139,25 +141,25 @@ let app = new Vue({
     },
     template: `
     <div class="doard">
-      <task-column
-        v-for="column in columns"
-        :key="column.id"
-        :column="column"
-        :returning-card-id="returningCardId"
-        :return-reason="returnReason"
-        :new-card="newCard"
-        @create="createCard"
-        @move-card="moveToColumn"
-        @delete-card="deleteCard"
-        @edit-card-start="startEdit"
-        @edit-card-save="saveEdit"
-        @edit-card-cancel="cancelEdit"
-        @return-form-show="showReturnForm"
-        @return-confirm="confirmReturn"
-        @return-cancel="cancelReturn"
-        @update:return-reason="returnReason = $event"
-      ></task-column>
-    </div>
+    <task-column
+    v-for="column in columns"
+    :key="column.id"
+    :column="column"
+    :returning-card-id="returningCardId"
+    :return-reason="returnReason"
+    :new-card="newCard"
+    @create="createCard"
+    @move-card="moveToColumn"
+    @delete-card="deleteCard"
+    @edit-card-start="startEdit"
+    @edit-card-save="saveEdit"
+    @edit-card-cancel="cancelEdit"
+    @return-form-show="showReturnForm"
+    @return-confirm="confirmReturn"   
+    @return-cancel="cancelReturn"
+    @update:return-reason="returnReason = $event"
+  />
+  </div>
   `,
     methods: {
         createCard() {
@@ -234,21 +236,37 @@ let app = new Vue({
             this.returningCardId = cardId;
             this.returnReason = '';
         },
-        confirmReturn() {
-            if (!this.returnReason.trim()) return;
+        confirmReturn(returnReason) {
+
+            console.log('Причина возврата:', returnReason);
+            if (!returnReason || !returnReason.trim()) {
+                alert('Пожалуйста, укажите причину возврата!');
+                return;
+            }
 
             let card = null;
+            let sourceColumn = null;
+
             for (const col of this.columns) {
-                card = col.cards.find(c => c.id === this.returningCardId);
-                if (card) break;
+                const found = col.cards.find(c => c.id === this.returningCardId);
+                if (found) {
+                    card = found;
+                    sourceColumn = col;
+                    break;
+                }
             }
 
-            if (card) {
-                card.returnReason = this.returnReason.trim();
-                this.moveToColumn(this.returningCardId, 2);
-            }
+            if (card && sourceColumn) {
+                const index = sourceColumn.cards.findIndex(c => c.id === this.returningCardId);
+                sourceColumn.cards.splice(index, 1);
 
-            this.cancelReturn();
+                card.returnReason = returnReason.trim();
+
+                this.columns[1].cards.push(card);
+
+                this.returningCardId = null;
+                this.returnReason = '';
+            }
         },
         cancelReturn() {
             this.returningCardId = null;
